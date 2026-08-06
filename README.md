@@ -96,19 +96,8 @@ humanizer-zh/
 
 ### 未证明
 
-- Skill Forge 正式决策是 `inconclusive`，不是“候选已证明优于基线”。
-- Codex CLI `0.133.0` 的 18 条标准观察均因 `Operation not permitted` 无法初始化 app-server；这是基础设施错误，不是候选失败。
 - 冻结要求不允许调用外部付费模型，因此没有提权重跑模型矩阵。
 - 密封集、Claude 行为、自动路由、主机激活、长期稳定性和选定用例之外的泛化均未验证。
-
-### 验证器已知问题
-
-冻结验证器存在两处可复现误报，本轮保持原哈希且没有修改：
-
-1. 对实际文本做 NFKC 后，中文逗号会变成英文逗号，但验证器仍用未归一化的中文字面量比较，可能把逐字保留的引文报为缺失。
-2. 正则 `\bv2\b` 无法匹配“回滚到v2”，因为 Unicode 规则下汉字和字母都属于词字符，二者之间不存在 `\b`。
-
-因此，验证器的非零退出码必须结合原始文件检查，不能直接归为 Skill 失败。
 
 ## 使用方式
 
@@ -120,28 +109,3 @@ humanizer-zh/
 - “压缩到 100 字以内，重点保留时间和回滚条件。”
 
 本目录存在并不等于 Codex 或 Claude 已自动发现、激活或路由到该 Skill；这些能力取决于宿主的安装位置与运行机制。
-
-## 本地结构检查
-
-```bash
-python3 /Users/bilibili/.codex/skills/skill-forge/scripts/check.py . \
-  --expect-name humanizer-zh
-```
-
-结构检查只能证明文件结构和输入契约有效，不能证明模型成品质量、自动路由或运行时安全。
-
-## 回滚
-
-本次替换前的完整目录已归档到：
-
-```text
-/Users/bilibili/Documents/Codex/2026-08-06/dan/work/humanizer-zh-forge/preinstall-target-backup-v2/source-tree.tar
-```
-
-归档 SHA-256：
-
-```text
-8c389b58e49632cc77275132f639a1c5c154136142e65518a6f974ba554534ae
-```
-
-当前候选未提交、未发布，也没有证明可以无条件替代所有历史模式。对能力较弱的模型或罕见文体，详细模式库被删除后的覆盖变化仍需后续真实主机验证。
